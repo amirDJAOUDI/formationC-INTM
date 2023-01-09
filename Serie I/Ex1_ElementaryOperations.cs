@@ -15,12 +15,11 @@ namespace Serie_I
         public static void BasicOperation(int a, int b, char operation)
         {
 
-            // Créer une liste 
+            // Créer une liste et ajouter les éléments de la liste
             List<char> vListValideOperateurs = new List<char> { '+','-','*','/'};
-            // Ajouter des éléments à la liste 
            
-
-            if (vListValideOperateurs.Contains(operation) == false || a==0)
+            // verifications 1) l'opérateur est bien dans la liste., 2) b n'est pas égal à zéro 
+            if (vListValideOperateurs.Contains(operation) == false || b==0)
             {
                 Console.WriteLine("Opération invalide");
             } else

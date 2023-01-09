@@ -18,7 +18,7 @@ namespace Serie_I
             // Créer une liste et ajouter les éléments de la liste
             List<char> vListValideOperateurs = new List<char> { '+','-','*','/'};
            
-            // verifications 1) l'opérateur est bien dans la liste., 2) b n'est pas égal à zéro 
+            // verifications 1) l'opérateur est bien dans la liste, 2) b n'est pas égal à zéro 
             if (vListValideOperateurs.Contains(operation) == false || b==0)
             {
                 Console.WriteLine("Opération invalide");
@@ -44,7 +44,13 @@ namespace Serie_I
 
         public static void Pow(int a, int b)
         {
-            //TODO
-        }
+            if (b == 0)
+            {Console.WriteLine("Opération invalide");}
+            else{
+
+                Console.WriteLine(Math.Pow(a, b));
+
+            }
+            }
     }
 }

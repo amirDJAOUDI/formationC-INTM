@@ -16,25 +16,17 @@ namespace Serie_I
         {
 
             // Créer une liste 
-            List<string> vListValideOperateurs = new List<string>();
+            List<char> vListValideOperateurs = new List<char> { '+','-','*','/'};
             // Ajouter des éléments à la liste 
-            vListValideOperateurs.Add("+");
-            vListValideOperateurs.Add("-");
-            vListValideOperateurs.Add("*");
-            vListValideOperateurs.Add("/");
+           
 
-            if (vListValideOperateurs.Contains(getString(operation)) == false || (a==0 || b==0))
+            if (vListValideOperateurs.Contains(operation) == false || a==0)
             {
                 Console.WriteLine("Opération invalide");
             } else
             {
                 Console.WriteLine(a + operation + b);
             }
-        }
-
-        private static string getString(char operation)
-        {
-            throw new NotImplementedException();
         }
 
         public static void IntegerDivision(int a, int b)

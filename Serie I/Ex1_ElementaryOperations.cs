@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Serie_I
 {
-    public static class ElementaryOperations
+    public class ElementaryOperations
     {
-        public static void BasicOperation(int a, int b, char operation)
+        public void BasicOperation(int a, int b, char operation)
         {
 
             // Créer une liste et ajouter les éléments de la liste
@@ -24,11 +24,22 @@ namespace Serie_I
                 Console.WriteLine("Opération invalide");
             } else
             {
-                Console.WriteLine(a + operation + b);
+
+                int result =0;
+                if (operation == '+')
+                    result = a + b;
+                else if (operation == '-')
+                    result = a - b;
+                else if (operation == '*')
+                    result = a * b;
+                else if (operation == '/')
+                    result = a / b;
+
+                Console.WriteLine(result);
             }
         }
 
-        public static void IntegerDivision(int a, int b)
+        public void IntegerDivision(int a, int b)
         {
             if (b == 0)
             {
@@ -42,7 +53,7 @@ namespace Serie_I
             }
         }
 
-        public static void Pow(int a, int b)
+        public void Pow(int a, int b)
         {
             if (b == 0)
             {Console.WriteLine("Opération invalide");}

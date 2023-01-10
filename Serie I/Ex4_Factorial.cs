@@ -14,10 +14,5 @@ namespace Serie_I
             return -1;
         }
 
-        public static int FactorialRecursive(int n)
-        {
-            //TODO
-            return -1;
-        }
     }
 }

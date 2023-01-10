@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Serie_I
 {
-    public static class Pyramid
+    public class Pyramid
     {
-        public static void PyramidConstruction(int n, bool isSmooth)
+        public void PyramidConstruction(int n, bool isSmooth)
         {
             Console.WriteLine("hauteur: " + n);
 

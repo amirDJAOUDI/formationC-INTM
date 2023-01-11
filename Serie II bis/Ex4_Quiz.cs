@@ -50,15 +50,11 @@ namespace Serie_II
                     Console.WriteLine("Veuillez mettre une réponse parmi le choix proposé: ");
                     i--;
 
-                }
-
-                
-
+                }    
 
             }
 
             Console.WriteLine("Nombre de points : " + nombrePoints);
-
         }
     }
 }

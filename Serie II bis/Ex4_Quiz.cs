@@ -8,26 +8,54 @@ namespace Serie_II
 {
     public struct Qcm
     {
-        //TODO
+        public string Question;
+        public int Solution;
+        public string[] Answers;
+        public int Weight;
+
+        public Qcm(string qst, string[] answr, int sln, int wgh) : this()
+        {
+            Question = qst;
+            Answers = answr;
+            Solution = sln;
+            Weight = wgh;
+        }
     }
 
-    public static class Quiz
+    public class Quiz
     {
-        public static void AskQuestions(Qcm[] qcms)
+        public void AskQuestions(Qcm[] qcms)
         {
-            //TODO
-        }
+            int nombrePoints = 0;
+            for (int i = 0; i <= qcms.Length; i++)
+            {
+                Console.WriteLine(qcms[i].Question);
+                foreach (string answ in qcms[i].Answers)
+                {
+                    Console.WriteLine(answ);
+                }
 
-        public static int AskQuestion(Qcm qcm)
-        {
-            //TODO
-            return -1;
-        }
+                Console.WriteLine("La réponse est (veuillez respecter les majuscules/miniscules: ");
+                string reponse = Console.ReadLine();
+                if (qcms[i].Answers.Contains(reponse)) { 
+                    if (string.Equals(reponse, qcms[i].Answers[qcms[i].Solution], StringComparison.OrdinalIgnoreCase))
+                    {
+                    Console.WriteLine("Bonne réponse");
+                        nombrePoints++;
 
-        public static bool QcmValidity(Qcm qcm)
-        {
-            //TODO
-            return false;
+                    }
+                } else
+                {
+                    Console.WriteLine("Veuillez mettre une réponse parmi le choix proposé: ");
+                    i--;
+
+                }
+
+                Console.WriteLine("Nombre de points : " + nombrePoints);
+
+
+            }
+
         }
     }
 }

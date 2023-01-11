@@ -27,7 +27,7 @@ namespace Serie_II
         public void AskQuestions(Qcm[] qcms)
         {
             int nombrePoints = 0;
-            for (int i = 0; i <= qcms.Length; i++)
+            for (int i = 0; i < qcms.Length; i++)
             {
                 Console.WriteLine(qcms[i].Question);
                 foreach (string answ in qcms[i].Answers)
@@ -35,12 +35,13 @@ namespace Serie_II
                     Console.WriteLine(answ);
                 }
 
-                Console.WriteLine("La réponse est (veuillez respecter les majuscules/miniscules: ");
-                string reponse = Console.ReadLine();
-                if (qcms[i].Answers.Contains(reponse)) { 
-                    if (string.Equals(reponse, qcms[i].Answers[qcms[i].Solution], StringComparison.OrdinalIgnoreCase))
+                Console.WriteLine("La réponse est ? ");
+                string reponse = Console.ReadLine().ToUpper();
+
+                if (qcms[i].Answers.Contains(reponse) ) { 
+                    if (string.Equals(reponse, qcms[i].Answers[qcms[i].Solution]))
                     {
-                    Console.WriteLine("Bonne réponse");
+                    Console.WriteLine("Bonne réponse!!!!!");
                         nombrePoints++;
 
                     }
@@ -51,10 +52,12 @@ namespace Serie_II
 
                 }
 
-                Console.WriteLine("Nombre de points : " + nombrePoints);
+                
 
 
             }
+
+            Console.WriteLine("Nombre de points : " + nombrePoints);
 
         }
     }

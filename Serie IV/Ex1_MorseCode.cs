@@ -71,7 +71,29 @@ namespace Serie_IV
 
         public string MorseTranslation(string code)
         {
-            //TODO
+            VerifArguments(code);
+
+            string[] listWords = code.Split(new String[] { "......." }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string word in listWords)
+            {
+                Console.WriteLine("word " + word);
+                string[] listLettres = code.Split(new String[] { "..." }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string lettre in listLettres)
+                {
+                    Console.WriteLine(lettre);
+                    // translate
+
+
+
+                }
+
+            }
+
+
+
+
             return string.Empty;
         }
 

@@ -52,6 +52,8 @@ namespace Serie_IV
         public int LettersCount(string code)
         {
 
+            VerifArguments(code);
+
             string[] listLettres = code.Split(new String[] { "..." }, StringSplitOptions.RemoveEmptyEntries);
             Console.WriteLine("LettersCount: " + listLettres.Length);
 
@@ -60,6 +62,7 @@ namespace Serie_IV
 
         public int WordsCount(string code)
         {
+            VerifArguments(code);
             string[] listWords = code.Split(new String[] { "......." }, StringSplitOptions.RemoveEmptyEntries);
             Console.WriteLine("WordsCount: " + listWords.Length);
 
@@ -82,6 +85,25 @@ namespace Serie_IV
         {
             //TODO
             return string.Empty;
+        }
+
+        void VerifArguments(string code)
+        {
+            // verif caractéres
+            Char[] output = code.ToCharArray();
+
+            foreach (char c in output)
+            {
+                if (c.Equals('.') || c.Equals('='))
+                {
+                    continue;
+                } else
+            {
+                Console.WriteLine("Arguments non valides ");
+                throw new ArgumentException("Au moins un argument non valide est présent!!! " + c);
+            }
+            }
+
         }
     }
 }

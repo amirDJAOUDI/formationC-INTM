@@ -18,7 +18,7 @@ namespace Serie_III
             // Exercice I: Conseil de classe
             ClassCouncil conseilClasse = new ClassCouncil();
             Console.WriteLine("SchoolMeans");
-            conseilClasse.SchoolMeans("Marc,Histoire,12.0,Paul,Histoire,15.5,Yvonne,Maths,6.0,David,Francais,1.2,Paul,Maths,15.5", "Histoire, Maths");
+            conseilClasse.SchoolMeans("Marc,Histoire,12.0,Paul,Histoire,15.5,Yvonne,Maths,6.0,David,Francais,1.2,Paul,Maths,15.5", "Histoire,Maths");
         }
     }
 }

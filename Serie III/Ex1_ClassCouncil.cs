@@ -12,17 +12,19 @@ namespace Serie_III
 
     public class ClassCouncil
     {
+
+        double moyenneFrancais = 0;
+        double moyenneMaths = 0;
+        double moyenneHistoire = 0;
         public void SchoolMeans(string input, string output)
 
 
 
         {
             string[] listNotesParNomEtMatiere = input.Split(',');
-            double moyenneFrancais = 0;
+            
             Boolean premierPassageFrancais = false;
-            double moyenneMaths = 0;
             Boolean premierPassageMaths = false;
-            double moyenneHistoire = 0;
             Boolean premierPassageHistoire = false;
 
             for (int i =0; i < listNotesParNomEtMatiere.Length;i++)
@@ -78,15 +80,46 @@ namespace Serie_III
                 }
 
             }
-            Console.WriteLine("La moyenne de Francais: " + moyenneFrancais);
-            Console.WriteLine("La moyenne de Maths: " + moyenneMaths);
-            Console.WriteLine("La moyenne d'Histoire: " + moyenneHistoire);
+
+            // Display moyennes par matiere
+
+            Display(output);
+
+
+
+
         }
-    public double CalcMoyenne(double savMoyenne, string noteMatiere)
+     double CalcMoyenne(double savMoyenne, string noteMatiere)
         {
             double moyennes = (savMoyenne + Convert.ToDouble(noteMatiere, new CultureInfo("en-US"))) / 2;
 
             return moyennes;
+        }
+
+
+         void Display(string matieres)
+        {
+            string[] listMatieres = matieres.Split(',');
+
+            for (int i = 0; i < listMatieres.Length; i++)
+            {
+
+                switch (listMatieres[i])
+                {
+                    case "Francais":
+                        Console.WriteLine("La moyenne de Francais: " + moyenneFrancais);
+                        break;
+
+                    case "Maths":
+                        Console.WriteLine("La moyenne de Maths: " + moyenneMaths);
+                        break;
+
+                    case "Histoire":
+                        Console.WriteLine("La moyenne d'Histoire: " + moyenneHistoire);
+                        break;
+
+                }
+    }
         }
     }
 }

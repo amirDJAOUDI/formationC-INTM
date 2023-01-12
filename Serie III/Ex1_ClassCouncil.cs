@@ -44,7 +44,6 @@ namespace Serie_III
                             moyenneFrancais = Convert.ToDouble(listNotesParNomEtMatiere[i + 1], new CultureInfo("en-US"));
                             premierPassageFrancais = true;
                         }
-
                         break;
 
                     case "Maths":
@@ -59,7 +58,6 @@ namespace Serie_III
                             moyenneMaths = Convert.ToDouble(listNotesParNomEtMatiere[i + 1], new CultureInfo("en-US"));
                             premierPassageMaths = true;
                         }
-
                         break;
 
                     case "Histoire":
@@ -75,17 +73,12 @@ namespace Serie_III
                         }
                         break;
 
-
-
                 }
 
             }
 
             // Display moyennes par matiere
-
             Display(output);
-
-
 
 
         }

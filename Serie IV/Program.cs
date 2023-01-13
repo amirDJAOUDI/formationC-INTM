@@ -18,9 +18,9 @@ namespace Serie_IV
             Console.WriteLine("Exercice I: Code Morse");
             Morse codeMorse = new Morse();
             // exemple AZUL en morse
-            codeMorse.LettersCount("=.===...===.===.=.=...=.=.===...=.===.=.=");
+                //codeMorse.LettersCount("=.===...===.===.=.=...=.=.===...=.===.=.=");
             // exemple AZUL AMIR en morse
-            codeMorse.WordsCount("=.===...===.===.=.=...=.=.===...=.===.=.=.......=.===...===.===...=.=...=.===.="); 
+                //codeMorse.WordsCount("=.===...===.===.=.=...=.=.===...=.===.=.=.......=.===...===.===...=.=...=.===.="); 
             codeMorse.MorseTranslation("=.===...===.===.=.=...=.=.===...=.===.=.=.......=.===...===.===...=.=...=.===.=");
         }
     }

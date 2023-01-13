@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,6 +74,12 @@ namespace Serie_IV
         {
             VerifArguments(code);
 
+        
+           string[][] traducPartiel= new string[3][];
+
+            //List<String> traducPartiel = new List<String>();
+            int j = 0;
+
             string[] listWords = code.Split(new String[] { "......." }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string word in listWords)
@@ -80,10 +87,29 @@ namespace Serie_IV
                 Console.WriteLine("word " + word);
                 string[] listLettres = code.Split(new String[] { "..." }, StringSplitOptions.RemoveEmptyEntries);
 
-                foreach (string lettre in listLettres)
+                for (int i = 0; i < listLettres.Length; i++)
                 {
-                    Console.WriteLine(lettre);
+                    Console.WriteLine(listLettres[i]);
                     // translate
+                    //Char[] output = lettre.ToCharArray();
+                    traducPartiel[i] = new string[i + 1];
+                    string[] singleLetter = listLettres[i].Split('.');
+
+                    foreach (string item in singleLetter)
+                    {
+
+                        if (item.Equals("="))
+                        {
+                            traducPartiel[i][j] = "Ti";
+                            j++;
+
+                        } else if (item.Equals("==="))
+                        {
+                            traducPartiel[i][j] = "Taah";
+                            j++;
+
+                        }
+                    }
 
 
 

@@ -30,6 +30,10 @@ namespace Percolation
             _size = size;
         }
 
+        public Percolation()
+        {
+        }
+
         public bool IsOpen(int i, int j)
         {
             // determination de la position de la case:
@@ -82,6 +86,7 @@ namespace Percolation
 
         public void Open(int i, int j)
         {
+
             IsOutOfRange(i, j);
 
             if (!IsOpen (i, j))

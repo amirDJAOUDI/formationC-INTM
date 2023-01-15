@@ -37,7 +37,7 @@ namespace Percolation
             PercolationSimulation PercoSimul = new PercolationSimulation();
              //PercoSimul.PercolationSimul();
 
-            PercoSimul.MeanPercolationValue(80, 75);
+            PercoSimul.MeanPercolationValue(89, 70);
 
 
         }

@@ -36,18 +36,31 @@ namespace Percolation
             
         }
 
-
         public PclData MeanPercolationValue(int size, int t)
         {
-            double[] listPercovalue= new double[t];
+            // Calcul de moyenne et d'écart-type
+            double meanPercoValue = 0;
+            double[] listPercoValue = new double[t];
+            PclData pclData = new PclData();
 
+            // recuperation de la liste des valeurs de percolation
             for (int i = 0; i < t; i++) {
 
-                listPercovalue[i] = PercolationValue(size);
+                listPercoValue[i] = PercolationValue(size);
             }
 
+            // Calcul de moyenne
+            meanPercoValue = listPercoValue.Average();
+            Console.WriteLine("meanPercoValue: " + meanPercoValue);
+            pclData.Mean = meanPercoValue;
 
-            return new PclData();
+            // Calcul d'écart-type:
+            double sum = listPercoValue.Sum(d => Math.Pow(d - meanPercoValue, 2));
+            double standard_deviation = Math.Sqrt((sum) / listPercoValue.Count());
+            Console.WriteLine("standard_deviation: " + standard_deviation);
+            pclData.StandardDeviation = standard_deviation;
+
+            return pclData;
         }
 
         public double PercolationValue(int size)

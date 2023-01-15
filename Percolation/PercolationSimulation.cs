@@ -37,7 +37,6 @@ namespace Percolation
             {
                 Perc.Open(5 * rnd.Next(), 5 * rnd.Next());
                 nombreCaseOpen++;
-
             }
             return nombreCaseOpen/ 36;
         }

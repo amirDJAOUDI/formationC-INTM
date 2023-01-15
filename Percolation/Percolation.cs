@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,10 +14,9 @@ namespace Percolation
         private readonly bool[,] _full;
         private readonly int _size;
         private bool _percolate;
-        private int[] caseOpen = new int[36];
-        private int[] caseFull = new int[36];
-        private int k = 0;
-        int position = 0;
+
+        char[,] tableOpen = new char[6,6];
+        char[,] tableFull = new char[6,6];
 
         public Percolation(int size)
         {
@@ -34,36 +34,7 @@ namespace Percolation
         {
         }
 
-        public bool IsOpen(int i, int j)
-        {
-            // determination de la position de la case:
-            if (i == 0)
-            {
-                position = j--;
-            } else { 
-                position = (i--) * _size + j--;
-            }
-
-            if (caseOpen.Contains(position)) { return true; }
-
-            return false;
-        }
-
-        private bool IsFull(int i, int j)
-        {
-            // determination de la position de la case:
-            if (i == 0)
-            {
-                position = j--;
-            }
-            else
-            {
-                position = (i--) * _size + j--;
-            }
-
-            if (caseFull.Contains(position)) { return true; }
-            return false;
-        }
+      
 
         public bool Percolate()
         {
@@ -71,12 +42,7 @@ namespace Percolation
             int positionImaxJ0 = Convert.ToInt32(_size - Math.Sqrt(_size));
 
             // boucle sur les positions suivantes, si une seul des position est vrais, alors il y'a percolation
-            for (int x = positionImaxJ0; x < _size; x++)
-            if (caseFull.Contains(position))
-            {
-                return true;
-            }
-                return false;
+            return false;
         }
 
         private List<KeyValuePair<int, int>> CloseNeighbors(int i, int j)
@@ -86,30 +52,62 @@ namespace Percolation
 
         public void Open(int i, int j)
         {
-
-            IsOutOfRange(i, j);
-
-            if (!IsOpen (i, j))
+            // Ouverture de la case [i,j]
+            if (!isOpen(i, j))
             {
-                // ouverture de la case
-                caseOpen[k] = position;
-
-                // remplissage de la case:
-                //verfification des positions des voisins: gauche -1/ droite +1/ haut -i/ bas +i
-                if (i==0 || caseFull.Contains(position -1 ) || caseFull.Contains(position + 1) || caseFull.Contains(position - i) || caseFull.Contains(position + i))
-                {
-                    caseFull[k] = position;
-                }
+                tableOpen[i,j] = 'O';
+                
             }
+
+            // Remplissage de la case [i,j]
+            // deternminer les cases voisines de [i,j]
+                // voisin d'en haut [--i,j]
+                int k = i -1;
+                if ((k <= 0) || ((k > 0 && isFull(k , j))))
+                {
+                    tableFull[i, j] = 'F';
+                }
+
+                // voisin d'en bas [++i,j]
+                k = i + 1;
+                if (k < _size && isOpen(k, j))
+                {
+                    tableFull[k, j] = 'F';
+                }
+
+                // voisin de gauche [i,--j]
+                k = j - 1;
+                if (k >= 0 && isFull(i, k))
+                {
+                    tableFull[i, j] = 'F';
+                }
+
+                // voisin de droite [i,j++]
+                k = j + 1;
+                if (k < _size && isFull(i, k))
+                {
+                    tableFull[i, j] = 'F';
+                }
 
         }
 
-        private void IsOutOfRange(int i, int j)
+        public bool isOpen(int i, int j)
         {
-            if( i > _size || j > _size)
-            {
-                throw new IndexOutOfRangeException();
-            }
+            // verifier si la case est ouverte:
+            return isEquals(tableOpen[i,j], 'O');
+        }
+
+        private bool isFull(int i, int j)
+        {
+            // verifier si la case est pleine:
+            return isEquals(tableFull[i,j], 'F');
+        }
+
+        private bool isEquals(char tab, char eq)
+        {
+            if (tab.Equals(eq))
+            { return true; }
+            else { return false; }
         }
     }
 }

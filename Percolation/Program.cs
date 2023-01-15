@@ -14,7 +14,7 @@ namespace Percolation
         Exemple pour un tableau de 6 * 6 ==> 36 - 6 + 1, donc 31 ouverture de case max pour avoir percolation. */
 
         // 3.c) la probablité statistique pour que ce cas se produit est infine car on utilise un random qui génére un nombre de facon aléatoire
-        //      et la probablité d'ouvrir toutes les cases à l'exception du dernier est trés basse.
+        //      et la probablité d'ouvrir toutes les cases à l'exception du dernier étage est trés basse.
 
 
 
@@ -24,17 +24,16 @@ namespace Percolation
 
             // Keep the console window open
             Console.WriteLine("----------------------");
-            Console.WriteLine("Press any key to exit.");
-            Console.ReadKey();
+            Console.WriteLine("Percolation");
 
             // 3.a)
-            //ouverture aleatoire d'une position i et j: utilisation de la méthode random et 36 correspond à la taille du tableau
+            //ouverture aleatoire d'une position i et j: utilisation de la méthode random et 36 correspond à la taille du tableau (6x6)
             Random rnd = new Random();
             Percolation Perco = new Percolation();
 
             for (int i = 0;i < 36 ; i++) { 
             
-            Perco.Open(5 * rnd.Next(), 5 * rnd.Next());
+                Perco.Open(rnd.Next(0,6), rnd.Next(0, 6));
 
             }
 

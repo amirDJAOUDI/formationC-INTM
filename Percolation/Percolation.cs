@@ -13,10 +13,8 @@ namespace Percolation
         private readonly bool[,] _open;
         private readonly bool[,] _full;
         private readonly int _size;
-        private bool _percolate;
-
-        char[,] tableOpen = new char[6,6];
-        char[,] tableFull = new char[6,6];
+        char[,] tableOpen = new char[9, 9];
+        char[,] tableFull = new char[9, 9];
 
         public Percolation(int size)
         {
@@ -28,26 +26,26 @@ namespace Percolation
             _open = new bool[size, size];
             _full = new bool[size, size];
             _size = size;
+
+            tableOpen = new char[size, size];
+            tableFull = new char[size, size];
+
         }
 
-        public Percolation()
+        public bool isPercolation()
         {
+            return Percolate();
         }
-
-       
 
         public void Open(int i, int j)
         {
             // Ouverture de la case [i,j]
             if (!isOpen(i, j))
             {
-                tableOpen[i,j] = 'O';
-                
+                tableOpen[i,j] = 'O';   
             }
-
             // Remplissage de la case [i,j]
             CloseNeighbors(i, j);   
-
         }
 
         public bool Percolate()

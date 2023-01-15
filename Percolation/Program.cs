@@ -27,18 +27,17 @@ namespace Percolation
             Console.WriteLine("Percolation");
 
             // 3.a)
-            //ouverture aleatoire d'une position i et j: utilisation de la méthode random et 36 correspond à la taille du tableau (6x6)
-            Random rnd = new Random();
-            Percolation Perco = new Percolation();
+            //ouverture aleatoire d'une position i et j: utilisation de la méthode random et la taille du tableau est de (6x6)
+                /*Random rnd = new Random();
+            Percolation Perco = new Percolation(6);
+            Perco.Open(rnd.Next(0,6), rnd.Next(0, 6)); */
 
-            for (int i = 0;i < 36 ; i++) { 
-            
-                Perco.Open(rnd.Next(0,6), rnd.Next(0, 6));
-
-            }
 
             // simulation
             PercolationSimulation PercoSimul = new PercolationSimulation();
+             //PercoSimul.PercolationSimul();
+
+            PercoSimul.MeanPercolationValue(80, 75);
 
 
         }

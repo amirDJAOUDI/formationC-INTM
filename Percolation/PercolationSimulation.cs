@@ -24,33 +24,53 @@ namespace Percolation
 
     public class PercolationSimulation
     {
+        Percolation Perc = new Percolation(6);
+       
 
-        private int[][] tabGrilles = new int[6][];
+      public void PercolationSimul() {
 
-        Random rnd = new Random();
-        Percolation Perc = new Percolation();
-        int nombreCaseOpen = 0;
-
-      public int PercolationSimul() {
-
-            for (int i = 0; i < 36; i++)
-            {
-                Perc.Open(5 * rnd.Next(), 5 * rnd.Next());
-                nombreCaseOpen++;
-            }
-            return nombreCaseOpen/ 36;
+           
+            double percoValue = PercolationValue(36);
+            Console.WriteLine("percoValue: " + percoValue);
+ 
+            
         }
-
 
 
         public PclData MeanPercolationValue(int size, int t)
         {
+            double[] listPercovalue= new double[t];
+
+            for (int i = 0; i < t; i++) {
+
+                listPercovalue[i] = PercolationValue(size);
+            }
+
+
             return new PclData();
         }
 
         public double PercolationValue(int size)
         {
-            return 0;
+            Random rnd = new Random();
+            Percolation Perco = new Percolation(size);
+            int index = Convert.ToInt32(Math.Sqrt(size));
+            int nombreCaseOpen = 0;
+            double percoValue = 0;
+
+            for (int i = 0; i < size; i++)
+            {
+                Perco.Open(rnd.Next(0, index), rnd.Next(0, index));
+                ++nombreCaseOpen;
+
+                if (Perco.isPercolation())
+                {
+                    percoValue = (double)nombreCaseOpen / size;
+                    return percoValue;
+                }
+            }
+
+            return percoValue;
         }
     }
 }

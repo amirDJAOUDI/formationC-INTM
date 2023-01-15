@@ -34,21 +34,7 @@ namespace Percolation
         {
         }
 
-      
-
-        public bool Percolate()
-        {
-            // determiner la position de imax et j0
-            int positionImaxJ0 = Convert.ToInt32(_size - Math.Sqrt(_size));
-
-            // boucle sur les positions suivantes, si une seul des position est vrais, alors il y'a percolation
-            return false;
-        }
-
-        private List<KeyValuePair<int, int>> CloseNeighbors(int i, int j)
-        {
-            return null;
-        }
+       
 
         public void Open(int i, int j)
         {
@@ -60,35 +46,21 @@ namespace Percolation
             }
 
             // Remplissage de la case [i,j]
-            // deternminer les cases voisines de [i,j]
-                // voisin d'en haut [--i,j]
-                int k = i -1;
-                if ((k <= 0) || ((k > 0 && isFull(k , j))))
-                {
-                    tableFull[i, j] = 'F';
-                }
+            CloseNeighbors(i, j);   
 
-                // voisin d'en bas [++i,j]
-                k = i + 1;
-                if (k < _size && isOpen(k, j))
-                {
-                    tableFull[k, j] = 'F';
-                }
+        }
 
-                // voisin de gauche [i,--j]
-                k = j - 1;
-                if (k >= 0 && isFull(i, k))
-                {
-                    tableFull[i, j] = 'F';
-                }
+        public bool Percolate()
+        {
+            // determiner la position de imax et j0
+            int indiceImax = Convert.ToInt32(Math.Sqrt(_size) -1);
 
-                // voisin de droite [i,j++]
-                k = j + 1;
-                if (k < _size && isFull(i, k))
-                {
-                    tableFull[i, j] = 'F';
-                }
-
+            for (int j = 0; j < _size; j++)
+            {
+                if (isFull(indiceImax, j))
+                { return true; } 
+            }
+            return false;
         }
 
         public bool isOpen(int i, int j)
@@ -101,6 +73,38 @@ namespace Percolation
         {
             // verifier si la case est pleine:
             return isEquals(tableFull[i,j], 'F');
+        }
+
+        private void CloseNeighbors(int i, int j)
+        {
+            // deternminer les cases voisines de [i,j]
+            // voisin d'en haut [--i,j]
+            int k = i - 1;
+            if ((k <= 0) || ((k > 0 && isFull(k, j))))
+            {
+                tableFull[i, j] = 'F';
+            }
+
+            // voisin d'en bas [++i,j]
+            k = i + 1;
+            if (k < _size && isOpen(k, j))
+            {
+                tableFull[k, j] = 'F';
+            }
+
+            // voisin de gauche [i,--j]
+            k = j - 1;
+            if (k >= 0 && isFull(i, k))
+            {
+                tableFull[i, j] = 'F';
+            }
+
+            // voisin de droite [i,j++]
+            k = j + 1;
+            if (k < _size && isFull(i, k))
+            {
+                tableFull[i, j] = 'F';
+            }
         }
 
         private bool isEquals(char tab, char eq)

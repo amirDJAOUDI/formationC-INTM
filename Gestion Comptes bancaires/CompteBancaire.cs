@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,11 +15,10 @@ namespace CompteBancaire
         {
  
         }
-
         public bool EchangeArgent( int montant, int compteIdExped, int compteIdDest, Parse_csv.compte[] comptesFile)
         {
             try
-            {
+            {   
                 // sauvegarde du solde initial
                 Parse_csv.compte[] comptesFileSav = comptesFile;
 
@@ -70,14 +70,13 @@ namespace CompteBancaire
         }
 
         private bool Crediter(int montant, Parse_csv.compte compte)
-        {
+        {    
             if (compte.solde.Equals("")) 
             { compte.solde = "0"; }
 
-
             if (montant >= 0)
             {
-                int solde = montant + Convert.ToInt32(compte.solde);
+                double solde = montant + Convert.ToDouble(compte.solde, new CultureInfo("en-US"));
                 compte.solde = Convert.ToString(solde);
 
                 return true;
@@ -89,14 +88,15 @@ namespace CompteBancaire
         }
         private bool Debiter(int montant, Parse_csv.compte compte, Parse_csv.compte[] compteFileSav)
         {
+            
             if (compte.solde.Equals(""))
             { compte.solde = "0"; }
 
-            int solde = Convert.ToInt32(compte.solde);
+            double solde = Convert.ToDouble(compte.solde, new CultureInfo("en-US"));
 
             if (montant >= 0 && solde > montant && IsAmountexceed(compte, compteFileSav, montant))
- 
-                {
+            {
+                
                 solde -= montant;
                 compte.solde = Convert.ToString(solde);
 
@@ -107,11 +107,11 @@ namespace CompteBancaire
         }
 
         private bool IsAmountexceed(Parse_csv.compte compte, Parse_csv.compte[] compteSav, int montant)
+
         {
-         
             for (int i = 0; i < compteSav.Length; i++)
-            {
-                if (compteSav[i].compteId.Equals(compte.compteId) && (Convert.ToInt32(compteSav[i].solde) - Convert.ToInt32(compte.solde) + montant) <= retraitAutorise)
+            {  
+                if (compteSav[i].compteId.Equals(compte.compteId) && ((Convert.ToDouble(compteSav[i].solde, new CultureInfo("en-US")) - Convert.ToDouble(compte.solde, new CultureInfo("en-US")) + montant) <= retraitAutorise))
                 {
                     return true;
                 }
@@ -133,7 +133,6 @@ namespace CompteBancaire
             { typeEchange = "VIREMENT/PRELEVEMENT"; }
 
             return typeEchange;
-
 
         }
 

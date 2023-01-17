@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +14,11 @@ namespace CompteBancaire
 
     class Program
     {
-
-
+ 
         static void Main(string[] args)
         {
 
-           Parse_csv.ParseFiles parsFile = new Parse_csv.ParseFiles();
+            Parse_csv.ParseFiles parsFile = new Parse_csv.ParseFiles();
 
             // parse du fichier d'entrée "compte"
             Parse_csv.compte[] comptesFile = parsFile.Parse_CompteFile();
@@ -57,13 +56,15 @@ namespace CompteBancaire
 
                     listtransStatus[k] = new Parse_csv.transactionStatus();
                     listtransStatus[k].transactionId = transactionsFile[i].transactionId;
-                    k++;
+                    
 
                     if (compte.EchangeArgent(transactionsFile[i].montant, transactionsFile[i].compteIdExped, transactionsFile[i].compteIdDest, comptesFile))
                     {
-                        listtransStatus[i].status = "OK";
+                        listtransStatus[k].status = "OK";
                     }
-                    else { listtransStatus[i].status = "KO"; }
+                    else { listtransStatus[k].status = "KO"; }
+
+                    k++;
 
                 }
 

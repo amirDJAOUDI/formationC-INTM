@@ -9,10 +9,14 @@ using FileHelpers;
 namespace Parse_csv
 {
     [DelimitedRecord(";")]
-    public class compte
+    public class operationsComptes
     {
         public int compteId;
-        public string solde;
+        public DateTime dateTime;
+        public string soldeInitial;
+        public string entree;
+        public string sortie;
+        public int statut;
     }
 
     [DelimitedRecord(";")]
@@ -34,11 +38,11 @@ namespace Parse_csv
 
     class ParseFiles
     {
-        public Parse_csv.compte[] Parse_CompteFile()
+        public Parse_csv.operationsComptes[] Parse_CompteFile()
         {
-            var fileHelperEngine = new FileHelperEngine<compte>();
-            var comptes = fileHelperEngine.ReadFile(@"C:\Users\Azul\source\repos\amirDJAOUDI\formationC-INTM\Gestion Comptes bancaires\Comptes.csv");
-            return comptes;
+            var fileHelperEngine = new FileHelperEngine<operationsComptes>();
+            var operationsComptes = fileHelperEngine.ReadFile(@"C:\Users\Azul\source\repos\amirDJAOUDI\formationC-INTM\Gestion Comptes bancaires\Partie 2 Comptes et metrologie\operationsComptes.csv");
+            return operationsComptes;
         }
 
         public Parse_csv.transaction[] Parse_TransactionFile()

@@ -37,21 +37,21 @@ namespace Parse_csv
         public Parse_csv.compte[] Parse_CompteFile()
         {
             var fileHelperEngine = new FileHelperEngine<compte>();
-            var comptes = fileHelperEngine.ReadFile(@"C:\Users\Azul\source\repos\amirDJAOUDI\formationC-INTM\Gestion Comptes bancaires\Comptes.csv");
+            var comptes = fileHelperEngine.ReadFile(@"C:\Users\Azul\source\repos\amirDJAOUDI\formationC-INTM\Gestion Comptes bancaires\Partie 1 Transactions\Comptes.csv");
             return comptes;
         }
 
         public Parse_csv.transaction[] Parse_TransactionFile()
         {
             var fileHelperEngine = new FileHelperEngine<transaction>();
-            var transactions = fileHelperEngine.ReadFile(@"C:\Users\Azul\source\repos\amirDJAOUDI\formationC-INTM\Gestion Comptes bancaires\Transactions.csv");
+            var transactions = fileHelperEngine.ReadFile(@"C:\Users\Azul\source\repos\amirDJAOUDI\formationC-INTM\Gestion Comptes bancaires\Partie 1 Transactions\Transactions.csv");
             return transactions;
         }
 
         public void WriteTransactionStatus(Parse_csv.transactionStatus[] writeTransaction)
         {
             var fileHelperEngine = new FileHelperEngine<transactionStatus>();
-            fileHelperEngine.WriteFile(@"C:\Users\Azul\source\repos\amirDJAOUDI\formationC-INTM\Gestion Comptes bancaires\StatutsTransactions.csv", writeTransaction);
+            fileHelperEngine.WriteFile(@"C:\Users\Azul\source\repos\amirDJAOUDI\formationC-INTM\Gestion Comptes bancaires\Partie 1 Transactions\StatutsTransactions.csv", writeTransaction);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parse_csv;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -18,7 +19,12 @@ namespace CompteBancaire
         public bool EchangeArgent( int montant, int compteIdExped, int compteIdDest, Parse_csv.compte[] comptesFile)
         {
             try
-            {   
+            {
+                // verification du montant
+                if (montant == 0)
+                {
+                    return false;
+                }
                 // sauvegarde du solde initial
                 Parse_csv.compte[] comptesFileSav = comptesFile;
 
@@ -140,9 +146,18 @@ namespace CompteBancaire
         {
             for (int i =0; i < comptesFile.Length; i++)
             {
+                
 
                 if (comptesFile[i].compteId == IdCompte)
                 {
+                    if (comptesFile[i].solde.Equals(""))
+                    { comptesFile[i].solde = "0"; }
+
+                    if (Convert.ToDouble(comptesFile[i].solde, new CultureInfo("en-US")) < 0)
+                    {
+                        throw new ArgumentException(" Le solde du compte doit être positif! ", comptesFile[i].solde);
+
+                    } else
                     return comptesFile[i];
                 }
             }

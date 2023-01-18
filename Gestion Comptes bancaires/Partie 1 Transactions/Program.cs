@@ -27,25 +27,11 @@ namespace CompteBancaire
             Parse_csv.transaction[] transactionsFile = parsFile.Parse_TransactionFile();
             
 
-                // Boucle sur les transactions
-                Compte compte = new Compte();
-                List<int> ListSansDuplication = new List<int>();
-                int j = 0;
+            // Boucle sur les transactions
+            Compte compte = new Compte();
+            List<int> ListSansDuplication = new List<int>();
 
-            for (int i = 0;i < transactionsFile.Length; i++)
-            {
-
-                if (!ListSansDuplication.Contains(transactionsFile[i].transactionId)) 
-                {
-                    ListSansDuplication.Add(transactionsFile[i].transactionId);
-                    j++;
-                }
-
-            }
-
-            Parse_csv.transactionStatus[] listtransStatus = new Parse_csv.transactionStatus[j];
-            ListSansDuplication = new List<int>();
-            int k= 0;
+            Parse_csv.transactionStatus[] listtransStatus = new Parse_csv.transactionStatus[transactionsFile.Length];
 
             for (int i = 0; i < transactionsFile.Length; i++)
             {
@@ -54,25 +40,27 @@ namespace CompteBancaire
                 {
                     ListSansDuplication.Add(transactionsFile[i].transactionId);
 
-                    listtransStatus[k] = new Parse_csv.transactionStatus();
-                    listtransStatus[k].transactionId = transactionsFile[i].transactionId;
+                    listtransStatus[i] = new Parse_csv.transactionStatus();
+                    listtransStatus[i].transactionId = transactionsFile[i].transactionId;
                     
 
                     if (compte.EchangeArgent(transactionsFile[i].montant, transactionsFile[i].compteIdExped, transactionsFile[i].compteIdDest, comptesFile))
                     {
-                        listtransStatus[k].status = "OK";
+                        listtransStatus[i].status = "OK";
                     }
-                    else { listtransStatus[k].status = "KO"; }
+                    else { listtransStatus[i].status = "KO"; }
 
-                    k++;
-
+                } else
+                {
+                    listtransStatus[i] = new Parse_csv.transactionStatus();
+                    listtransStatus[i].transactionId = transactionsFile[i].transactionId;
+                    listtransStatus[i].status = "KO/Doublon";
                 }
 
             }
 
             // Ecriture du fichier de sortie "transaction"
             parsFile.WriteTransactionStatus(listtransStatus);
-
         }
     }
 }

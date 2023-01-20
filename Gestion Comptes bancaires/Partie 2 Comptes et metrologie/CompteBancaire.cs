@@ -10,60 +10,75 @@ namespace CompteBancaire
 {
     class Compte
     {
-        private int retraitAutorise =1000;
 
         public Compte()
         {
  
         }
-        public bool EchangeArgent( int montant, int compteIdExped, int compteIdDest, Parse_csv.compte[] comptesFile)
+        public void OperationComptes(Parse_csv.operationsComptes[] operationsComptes, Parse_csv.transactionGestionnaires[] transactionGestionnaires)
         {
             try
             {
-                // verification du montant
-                if (montant == 0)
+                // tableau des comptes créés
+                Parse_csv.operationsComptes[] operationsCreationCompte = new Parse_csv.operationsComptes[operationsComptes.Length];
+                int K =0;
+
+                // tableau des comptes cloturés
+                Parse_csv.operationsComptes[] operationsClotureCompte = new Parse_csv.operationsComptes[operationsComptes.Length];
+                int j = 0;
+
+                // indice des échanges de comptes réussis
+                int n = 0;
+                // nombre total de transaction
+                int i = 0;
+
+                // définir le type d'opération des comptes
+                for (i = 0; i< operationsComptes.Length; i++)
                 {
-                    return false;
-                }
-                // sauvegarde du solde initial
-                Parse_csv.compte[] comptesFileSav = comptesFile;
 
-                // définir le type d'échange
-                string typeEchange = TypeEchange(compteIdExped, compteIdDest);
+                    if(!operationsComptes[i].entree.Equals("") && !operationsComptes[i].sortie.Equals(""))
+                    {
+                       // opération d'échange de compte
+                       n = OperationEchange(operationsComptes, operationsCreationCompte, operationsClotureCompte, i, K, j, n, transactionGestionnaires);   
 
-            switch (typeEchange)
-            {
-                case "DEPOT":
-                    // récuperer le compte à créditer
-                    Parse_csv.compte compteCrediter = VerifCompte(compteIdDest, comptesFile);
-                    return Crediter(montant, compteCrediter);
-
-                case "RETRAIT":
-
-                        // récuperer le compte à debiter
-                        Parse_csv.compte compteDebiter = VerifCompte(compteIdExped, comptesFile);
-                        return Debiter(montant, compteDebiter, comptesFileSav);
-
-                case "VIREMENT/PRELEVEMENT":
-
-                        // débiter le compte expediteur et créditer le compte destinataire
-                        compteDebiter = VerifCompte(compteIdExped, comptesFile);
-
-                        if (Debiter(montant, compteDebiter, comptesFileSav)) 
+                    } else
+                    {
+                        // oprétaion de création de compte
+                        if (!operationsComptes[i].entree.Equals("") && !operationsComptes[i].date.Equals(""))
                         {
-                            compteCrediter = VerifCompte(compteIdDest, comptesFile);
-                            return Crediter(montant, compteCrediter);
-                        } 
-                    break;
+                            Console.WriteLine("Création du compte: " + operationsComptes[i].compteId);
+                            operationsCreationCompte[K] = operationsComptes[K];
+                            K++;
+                        }
 
-                default:
+                        // oprétaion de cloture de compte
+                        if (!operationsComptes[i].sortie.Equals(""))
+                        {
+                            
+                            for (int l = 0; l < K; l++)
+                            {
+                                if (operationsCreationCompte[l].compteId.Equals(operationsComptes[i].compteId) && 
+                                   (Convert.ToDateTime(operationsCreationCompte[l].date) < Convert.ToDateTime(operationsComptes[i].date)))
+                                {
+                                    Console.WriteLine("Cloture du compte: " + operationsComptes[i].compteId);
+                                    operationsClotureCompte[j] = operationsComptes[j];
+                                    j++;
 
-                    throw new ArgumentException("Type d'opération non prise en charge: ", typeEchange);
-            }
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine("{0}: {1}", e.GetType().Name, e.Message);
+                                }
+                            }
+
+                            
+                        }
+                    }
+                }
+
+                Console.WriteLine("nombre de creations reussis (=nombre de comptes): " + K);
+                Console.WriteLine("nombre d'échange reussis                        : " + n);
+                Console.WriteLine("nombre de clotures reussis                      : " + j);
+                Console.WriteLine("nombre total de transactions réussis            : " + (j+K+n));
+                Console.WriteLine("nombre total de transactions en échecs          : " + (i-(j + K + n)));
+                Console.WriteLine("nombre total de transactions                    : " + i);
+
             }
 
             catch (Exception e)
@@ -71,99 +86,60 @@ namespace CompteBancaire
                 Console.WriteLine("{0}: {1}", e.GetType().Name, e.Message);
             }
 
-            return false;
-
         }
 
-        private bool Crediter(int montant, Parse_csv.compte compte)
-        {    
-            if (compte.solde.Equals("")) 
-            { compte.solde = "0"; }
 
-            if (montant >= 0)
-            {
-                double solde = montant + Convert.ToDouble(compte.solde, new CultureInfo("en-US"));
-                compte.solde = Convert.ToString(solde);
-
-                return true;
-            }
-            else
-            {
-                throw new ArgumentException(" Le montant du dépôt doit être positif: ", Convert.ToString(montant));
-            }
-        }
-        private bool Debiter(int montant, Parse_csv.compte compte, Parse_csv.compte[] compteFileSav)
+        private int OperationEchange(Parse_csv.operationsComptes[] operationsComptes, Parse_csv.operationsComptes[] operationsCreationCompte, 
+                                     Parse_csv.operationsComptes[] operationsClotureCompte,int i, int k, int j, int n, Parse_csv.transactionGestionnaires[] transactionGestionnaires)
         {
-            
-            if (compte.solde.Equals(""))
-            { compte.solde = "0"; }
-
-            double solde = Convert.ToDouble(compte.solde, new CultureInfo("en-US"));
-
-            if (montant >= 0 && solde > montant && IsAmountexceed(compte, compteFileSav, montant))
+            for (int l = 0; l < k; l++)
             {
-                
-                solde -= montant;
-                compte.solde = Convert.ToString(solde);
 
-                return true;
-
-            }
-            return false;
-        }
-
-        private bool IsAmountexceed(Parse_csv.compte compte, Parse_csv.compte[] compteSav, int montant)
-
-        {
-            for (int i = 0; i < compteSav.Length; i++)
-            {  
-                if (compteSav[i].compteId.Equals(compte.compteId) && ((Convert.ToDouble(compteSav[i].solde, new CultureInfo("en-US")) - Convert.ToDouble(compte.solde, new CultureInfo("en-US")) + montant) <= retraitAutorise))
+                if (operationsCreationCompte[l].compteId.Equals(operationsComptes[i].compteId) 
+                    && ((Convert.ToDateTime(operationsCreationCompte[l].date) < Convert.ToDateTime(operationsComptes[i].date)))
+                    && (operationsCreationCompte[l].entree.Equals(operationsComptes[i].entree)))
                 {
-                    return true;
-                }
-            }
-            return false;
-        }
 
-        private string TypeEchange(int compteIdExped, int compteIdDest)
-        {
-            string typeEchange = "";
-
-            if (compteIdExped == 0)
-            { typeEchange = "DEPOT"; }
-
-            if (compteIdDest == 0)
-            { typeEchange = "RETRAIT"; }
-
-            if (compteIdExped > 0 && compteIdDest > 0)
-            { typeEchange = "VIREMENT/PRELEVEMENT"; }
-
-            return typeEchange;
-
-        }
-
-        private Parse_csv.compte VerifCompte(int IdCompte, Parse_csv.compte[] comptesFile)
-        {
-            for (int i =0; i < comptesFile.Length; i++)
-            {
-                
-
-                if (comptesFile[i].compteId == IdCompte)
-                {
-                    if (comptesFile[i].solde.Equals(""))
-                    { comptesFile[i].solde = "0"; }
-
-                    if (Convert.ToDouble(comptesFile[i].solde, new CultureInfo("en-US")) < 0)
+                    for (int o = 0; o < transactionGestionnaires.Length; o++)
                     {
-                        throw new ArgumentException(" Le solde du compte doit être positif! ", comptesFile[i].solde);
 
-                    } else
-                    return comptesFile[i];
+                        if (Convert.ToString(transactionGestionnaires[o].gestionnaireid).Equals(operationsComptes[i].sortie))
+                        {
+
+                            if (j == 0)
+                            {
+                                Console.WriteLine("Échange du compte: " + operationsComptes[i].compteId);
+                                n++;
+                            }
+                            else
+                            {
+
+                                for (int m = 0; m < j; m++)
+                                {
+
+                                    if (operationsClotureCompte[m].compteId.Equals(operationsComptes[i].compteId))
+                                    {
+                                        Console.WriteLine("Le compte est cloturé: " + operationsComptes[i].compteId);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Échange du compte: " + operationsComptes[i].compteId);
+                                        n++;
+                                    }
+                                }
+
+
+                            }
+
+                        }
+                    }
+
+                   
+
                 }
             }
-                
-                throw new ArgumentException(" Id du compte : " + IdCompte + " n'est pas présent dans le fichier des comptes!");
-            
+
+            return n;
         }
 
     }

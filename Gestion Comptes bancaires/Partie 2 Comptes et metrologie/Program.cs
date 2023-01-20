@@ -28,7 +28,7 @@ namespace CompteBancaire
 
             // Boucle sur les opérations sur compte
             Compte compte = new Compte();
-            compte.OperationComptes(operationsComptes, transactionGestionnaires);   
+            compte.OperationComptes(operationsComptes, transactionGestionnaires, transactions);
 
 
             // Ecriture du fichier de sortie "transaction"

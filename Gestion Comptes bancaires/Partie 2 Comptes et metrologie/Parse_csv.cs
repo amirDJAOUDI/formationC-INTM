@@ -51,7 +51,6 @@ namespace Parse_csv
         public string statut;
     }
 
-    [DelimitedRecord("")]
     public class metrologie
     {
         public string statistique;

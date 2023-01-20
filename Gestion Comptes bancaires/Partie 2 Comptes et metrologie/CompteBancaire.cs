@@ -10,12 +10,14 @@ namespace CompteBancaire
 {
     class Compte
     {
+        int montantTotalReussites = 0;
+        int n = 0;
 
         public Compte()
         {
  
         }
-        public void OperationComptes(Parse_csv.operationsComptes[] operationsComptes, Parse_csv.transactionGestionnaires[] transactionGestionnaires)
+        public void OperationComptes(Parse_csv.operationsComptes[] operationsComptes, Parse_csv.transactionGestionnaires[] transactionGestionnaires, Parse_csv.transactions[] transactions)
         {
             try
             {
@@ -28,7 +30,8 @@ namespace CompteBancaire
                 int j = 0;
 
                 // indice des échanges de comptes réussis
-                int n = 0;
+                Parse_csv.operationsComptes[] operationsEchangeCompte = new Parse_csv.operationsComptes[operationsComptes.Length];
+
                 // nombre total de transaction
                 int i = 0;
 
@@ -38,8 +41,8 @@ namespace CompteBancaire
 
                     if(!operationsComptes[i].entree.Equals("") && !operationsComptes[i].sortie.Equals(""))
                     {
-                       // opération d'échange de compte
-                       n = OperationEchange(operationsComptes, operationsCreationCompte, operationsClotureCompte, i, K, j, n, transactionGestionnaires);   
+                        // opération d'échange de compte
+                        operationsEchangeCompte = OperationEchange(operationsComptes, operationsCreationCompte, operationsClotureCompte, i, K, j, transactionGestionnaires);   
 
                     } else
                     {
@@ -72,12 +75,22 @@ namespace CompteBancaire
                     }
                 }
 
-                Console.WriteLine("nombre de creations reussis (=nombre de comptes): " + K);
-                Console.WriteLine("nombre d'échange reussis                        : " + n);
-                Console.WriteLine("nombre de clotures reussis                      : " + j);
-                Console.WriteLine("nombre total de transactions réussis            : " + (j+K+n));
-                Console.WriteLine("nombre total de transactions en échecs          : " + (i-(j + K + n)));
-                Console.WriteLine("nombre total de transactions                    : " + i);
+
+                Parse_csv.metrologie metrologie = new Parse_csv.metrologie();
+
+                Console.WriteLine("nombre d'échange de comptes reussis    : " + n);
+                Console.WriteLine("nombre de clotures reussis             : " + j);
+                Console.WriteLine("nombre de comptes créés                : " + K);
+
+                Console.WriteLine("*******Fichier des transactions**************");
+                metrologie.statistique = "Statistiques :";
+                Console.WriteLine(metrologie.statistique);
+
+                metrologie.nombreComptes = $"Nombre de comptes : {K}";
+                Console.WriteLine(metrologie.nombreComptes);
+                
+
+                OperationTransaction(operationsComptes, transactions, operationsCreationCompte, operationsClotureCompte, operationsEchangeCompte, metrologie) ;
 
             }
 
@@ -88,10 +101,37 @@ namespace CompteBancaire
 
         }
 
-
-        private int OperationEchange(Parse_csv.operationsComptes[] operationsComptes, Parse_csv.operationsComptes[] operationsCreationCompte, 
-                                     Parse_csv.operationsComptes[] operationsClotureCompte,int i, int k, int j, int n, Parse_csv.transactionGestionnaires[] transactionGestionnaires)
+        public void OperationTransaction(Parse_csv.operationsComptes[] operationsComptes, Parse_csv.transactions[] transactions, 
+                                         Parse_csv.operationsComptes[] operationsCreationCompte, Parse_csv.operationsComptes[] operationsClotureCompte,
+                                         Parse_csv.operationsComptes[] operationsEchangeCompte, Parse_csv.metrologie metrologie)
         {
+            try
+            {   int i = 0;
+                // boucle sur les transactions
+                for (i =0; i < transactions.Length; i++)
+                { 
+
+
+                
+                }
+
+                metrologie.nombretransaction = $"Nombre de transactions : {i}";
+                Console.WriteLine(metrologie.nombretransaction);
+
+
+            } catch (Exception e)
+            {
+                Console.WriteLine("{0}: {1}", e.GetType().Name, e.Message);
+            }
+
+        }
+
+
+        private Parse_csv.operationsComptes[] OperationEchange(Parse_csv.operationsComptes[] operationsComptes, Parse_csv.operationsComptes[] operationsCreationCompte, 
+                                     Parse_csv.operationsComptes[] operationsClotureCompte,int i, int k, int j, Parse_csv.transactionGestionnaires[] transactionGestionnaires)
+        {
+            Parse_csv.operationsComptes[] operationsEchange = new operationsComptes[operationsComptes.Length];
+            int p = 0;
             for (int l = 0; l < k; l++)
             {
 
@@ -110,6 +150,9 @@ namespace CompteBancaire
                             {
                                 Console.WriteLine("Échange du compte: " + operationsComptes[i].compteId);
                                 n++;
+                                operationsEchange[p] = operationsComptes[i];
+                                p++;
+
                             }
                             else
                             {
@@ -125,6 +168,8 @@ namespace CompteBancaire
                                     {
                                         Console.WriteLine("Échange du compte: " + operationsComptes[i].compteId);
                                         n++;
+                                        operationsEchange[p] = operationsComptes[i];
+                                        p++;
                                     }
                                 }
 
@@ -139,7 +184,16 @@ namespace CompteBancaire
                 }
             }
 
-            return n;
+            return operationsEchange;
+        }
+
+
+        private int MontantTotalReussites(Parse_csv.operationsComptes[] operationsComptes,int i)
+        {
+            if (operationsComptes[i].soldeInitial.Equals("")) { operationsComptes[i].soldeInitial = "0"; };
+            montantTotalReussites += Convert.ToInt32(operationsComptes[i].soldeInitial);
+
+            return montantTotalReussites;
         }
 
     }

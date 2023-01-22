@@ -12,6 +12,7 @@ namespace CompteBancaire
     {
         int montantTotalReussites = 0;
         int n = 0;
+        int retraitMax = 1000;
 
         public Compte()
         {
@@ -64,7 +65,7 @@ namespace CompteBancaire
                                    (Convert.ToDateTime(operationsCreationCompte[l].date) < Convert.ToDateTime(operationsComptes[i].date)))
                                 {
                                     Console.WriteLine("Cloture du compte: " + operationsComptes[i].compteId);
-                                    operationsClotureCompte[j] = operationsComptes[j];
+                                    operationsClotureCompte[l] = operationsComptes[i];
                                     j++;
 
                                 }
@@ -82,15 +83,7 @@ namespace CompteBancaire
                 Console.WriteLine("nombre de clotures reussis             : " + j);
                 Console.WriteLine("nombre de comptes créés                : " + K);
 
-                Console.WriteLine("*******Fichier des transactions**************");
-                metrologie.statistique = "Statistiques :";
-                Console.WriteLine(metrologie.statistique);
-
-                metrologie.nombreComptes = $"Nombre de comptes : {K}";
-                Console.WriteLine(metrologie.nombreComptes);
-                
-
-                OperationTransaction(operationsComptes, transactions, operationsCreationCompte, operationsClotureCompte, operationsEchangeCompte, metrologie) ;
+                OperationTransaction(operationsComptes, transactions, operationsCreationCompte, operationsClotureCompte, operationsEchangeCompte, metrologie, K, j) ;
 
             }
 
@@ -103,20 +96,61 @@ namespace CompteBancaire
 
         public void OperationTransaction(Parse_csv.operationsComptes[] operationsComptes, Parse_csv.transactions[] transactions, 
                                          Parse_csv.operationsComptes[] operationsCreationCompte, Parse_csv.operationsComptes[] operationsClotureCompte,
-                                         Parse_csv.operationsComptes[] operationsEchangeCompte, Parse_csv.metrologie metrologie)
+                                         Parse_csv.operationsComptes[] operationsEchangeCompte, Parse_csv.metrologie metrologie, int K, int j)
         {
             try
             {   int i = 0;
-                // boucle sur les transactions
+                int r = 0;
+                // boucle sur les transaction
                 for (i =0; i < transactions.Length; i++)
-                { 
+                {
+                    if (transactions[i].montant < retraitMax)
+                    {
+
+                        //if (transactions[i].transactionId == 3) {
+                        // verfifier que le ou les comptes sont créés:
+                        if (VerifCreationCompte(transactions[i], operationsCreationCompte, K))
+                        {
+                            // verifier que le compte n'est pas clos
+                            if (!VerifClotureCompte(transactions[i], operationsClotureCompte, j))
+                            {
+                                Console.WriteLine("***********Transaction OK transactionId: " + transactions[i].transactionId);
+                                r++;
+                                montantTotalReussites += transactions[i].montant;
+                            }
+
+                       //}
+                        }
+
+                    }
 
 
-                
                 }
 
-                metrologie.nombretransaction = $"Nombre de transactions : {i}";
+
+                Console.WriteLine("*********************************************");
+                Console.WriteLine("*******Fichier des transactions**************");
+                metrologie.statistique = "Statistiques :";
+                Console.WriteLine(metrologie.statistique);
+
+                metrologie.nombreComptes = $"Nombre de comptes : {K}";
+                Console.WriteLine(metrologie.nombreComptes);
+
+                metrologie.nombretransaction = $"Nombre de transaction : {i}";
                 Console.WriteLine(metrologie.nombretransaction);
+
+                metrologie.nombreReussites = $"Nombre de réussites : {r}";
+                Console.WriteLine(metrologie.nombreReussites);
+
+                metrologie.nombreEchecs = $"Nombre d'échecs : {(i - (r))}";
+                Console.WriteLine(metrologie.nombreEchecs);
+
+                metrologie.montantTotalReussites = $"Montant total des réussites : {montantTotalReussites}";
+                Console.WriteLine(metrologie.montantTotalReussites);
+
+                Console.WriteLine("*********************************************");
+
+
 
 
             } catch (Exception e)
@@ -195,6 +229,74 @@ namespace CompteBancaire
 
             return montantTotalReussites;
         }
+
+        private bool VerifCreationCompte(Parse_csv.transactions transaction, Parse_csv.operationsComptes[] operationsCreationCompte, int K)
+        {    
+
+            for (int j = 0; j < K; j++)
+            {
+
+                if (transaction.compteIdExped != 0 && transaction.compteIdDest != 0 && transaction.compteIdExped.Equals(operationsCreationCompte[j].compteId)
+                        && Convert.ToDateTime(transaction.dateEffet) > Convert.ToDateTime(operationsCreationCompte[j].date))
+                {
+
+                    for (int n = 0; n < K; n++) {
+
+
+                        if (transaction.compteIdDest.Equals(operationsCreationCompte[n].compteId)
+                        && Convert.ToDateTime(transaction.dateEffet) > Convert.ToDateTime(operationsCreationCompte[n].date)) 
+                        { return true; }
+                    }
+
+                }
+                else
+                {
+                    if (transaction.compteIdExped != 0 && transaction.compteIdExped.Equals(operationsCreationCompte[j].compteId)
+                        && Convert.ToDateTime(transaction.dateEffet) > Convert.ToDateTime(operationsCreationCompte[j].date))
+                    { return true; }
+
+                    if (transaction.compteIdDest != 0 && transaction.compteIdDest.Equals(operationsCreationCompte[j].compteId)
+                        && Convert.ToDateTime(transaction.dateEffet) > Convert.ToDateTime(operationsCreationCompte[j].date))
+                    { return true; }
+                }
+
+            }
+
+            return false;
+        }
+
+        private bool VerifClotureCompte(Parse_csv.transactions transaction, Parse_csv.operationsComptes[] operationsClotureCompte, int K)
+        {
+
+            for (int j = 0; j < K; j++)
+            {
+
+                if (transaction.compteIdExped != 0 && transaction.compteIdDest != 0 && transaction.compteIdExped.Equals(operationsClotureCompte[j].compteId)
+                        && Convert.ToDateTime(transaction.dateEffet) > Convert.ToDateTime(operationsClotureCompte[j].date))
+                {
+
+                    for (int n = 0; n < K; n++)
+                    {
+                        if (transaction.compteIdDest.Equals(operationsClotureCompte[n].compteId)
+                        && Convert.ToDateTime(transaction.dateEffet) > Convert.ToDateTime(operationsClotureCompte[n].date))
+                        { return true; }
+                    }
+
+                } else {
+                    if (transaction.compteIdExped != 0 && transaction.compteIdExped.Equals(operationsClotureCompte[j].compteId)
+                        && Convert.ToDateTime(transaction.dateEffet) > Convert.ToDateTime(operationsClotureCompte[j].date))
+                    { return true; }
+
+                    if (transaction.compteIdDest != 0 && transaction.compteIdDest.Equals(operationsClotureCompte[j].compteId)
+                        && (Convert.ToDateTime(transaction.dateEffet) > Convert.ToDateTime(operationsClotureCompte[j].date)))
+                    { return true; }
+                }
+
+            }
+
+            return false;
+        }
+
 
     }
 }
